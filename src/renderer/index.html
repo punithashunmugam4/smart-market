@@ -8,450 +8,314 @@
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Smart Market</title>
-    <style>
-      :root {
-        --bg: #0f0f1a;
-        --bg2: #1a1a2e;
-        --bg3: #16213e;
-        --accent: #6c63ff;
-        --accent2: #a78bfa;
-        --success: #22c55e;
-        --warning: #f59e0b;
-        --error: #ef4444;
-        --text: #e2e8f0;
-        --text-muted: #94a3b8;
-        --radius: 12px;
-      }
 
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-
-      body {
-        background: var(--bg);
-        color: var(--text);
-        font-family:
-          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-        user-select: none;
-      }
-
-      /* ── Title Bar ── */
-      .titlebar {
-        background: var(--bg2);
-        padding: 12px 20px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-        -webkit-app-region: drag;
-      }
-      .titlebar-title {
-        font-size: 14px;
-        font-weight: 600;
-      }
-      .titlebar-version {
-        font-size: 11px;
-        color: var(--text-muted);
-        background: rgba(108, 99, 255, 0.15);
-        padding: 2px 10px;
-        border-radius: 99px;
-        -webkit-app-region: no-drag;
-      }
-
-      /* ── Main Layout ── */
-      .app-body {
-        display: flex;
-        flex: 1;
-        overflow: hidden;
-      }
-
-      /* ── Sidebar ── */
-      .sidebar {
-        width: 200px;
-        background: var(--bg2);
-        padding: 20px 12px;
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-        border-right: 1px solid rgba(255, 255, 255, 0.06);
-      }
-      .nav-item {
-        padding: 10px 14px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 13px;
-        color: var(--text-muted);
-        transition: all 0.15s;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-      .nav-item:hover {
-        background: rgba(255, 255, 255, 0.06);
-        color: var(--text);
-      }
-      .nav-item.active {
-        background: rgba(108, 99, 255, 0.2);
-        color: var(--accent2);
-      }
-      .nav-icon {
-        font-size: 16px;
-        width: 20px;
-        text-align: center;
-      }
-
-      /* ── Content ── */
-      .content {
-        flex: 1;
-        overflow-y: auto;
-        padding: 32px;
-      }
-
-      .page {
-        display: none;
-      }
-      .page.active {
-        display: block;
-      }
-
-      /* ── Cards ── */
-      .card {
-        background: var(--bg2);
-        border: 1px solid rgba(255, 255, 255, 0.07);
-        border-radius: var(--radius);
-        padding: 24px;
-        margin-bottom: 20px;
-      }
-      .card-title {
-        font-size: 15px;
-        font-weight: 600;
-        margin-bottom: 16px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      /* ── Hero ── */
-      .hero {
-        text-align: center;
-        padding: 40px 20px;
-      }
-      .hero-icon {
-        font-size: 64px;
-        margin-bottom: 16px;
-        display: block;
-      }
-      .hero h1 {
-        font-size: 28px;
-        font-weight: 700;
-        margin-bottom: 8px;
-      }
-      .hero p {
-        color: var(--text-muted);
-        font-size: 15px;
-        line-height: 1.6;
-      }
-
-      /* ── Info Grid ── */
-      .info-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 16px;
-        margin-top: 20px;
-      }
-      .info-item {
-        background: var(--bg3);
-        border-radius: 8px;
-        padding: 16px;
-      }
-      .info-label {
-        font-size: 11px;
-        color: var(--text-muted);
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        margin-bottom: 6px;
-      }
-      .info-value {
-        font-size: 15px;
-        font-weight: 600;
-      }
-
-      /* ── Update Panel ── */
-      .update-status {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        padding: 16px;
-        border-radius: 8px;
-        background: var(--bg3);
-        margin-bottom: 16px;
-        min-height: 60px;
-      }
-      .status-dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        flex-shrink: 0;
-        background: var(--text-muted);
-      }
-      .status-dot.checking {
-        background: var(--warning);
-        animation: pulse 1s infinite;
-      }
-      .status-dot.available {
-        background: var(--accent);
-      }
-      .status-dot.downloading {
-        background: var(--accent2);
-        animation: pulse 0.8s infinite;
-      }
-      .status-dot.downloaded {
-        background: var(--success);
-      }
-      .status-dot.up-to-date {
-        background: var(--success);
-      }
-      .status-dot.error {
-        background: var(--error);
-      }
-
-      @keyframes pulse {
-        0%,
-        100% {
-          opacity: 1;
-        }
-        50% {
-          opacity: 0.3;
-        }
-      }
-
-      .status-text {
-        flex: 1;
-      }
-      .status-title {
-        font-size: 14px;
-        font-weight: 500;
-      }
-      .status-detail {
-        font-size: 12px;
-        color: var(--text-muted);
-        margin-top: 2px;
-      }
-
-      /* ── Progress Bar ── */
-      .progress-wrap {
-        margin-top: 10px;
-        display: none;
-      }
-      .progress-wrap.visible {
-        display: block;
-      }
-      .progress-bar-bg {
-        background: var(--bg3);
-        border-radius: 99px;
-        height: 6px;
-        overflow: hidden;
-      }
-      .progress-bar-fill {
-        height: 100%;
-        background: linear-gradient(90deg, var(--accent), var(--accent2));
-        border-radius: 99px;
-        transition: width 0.3s;
-        width: 0%;
-      }
-      .progress-label {
-        font-size: 12px;
-        color: var(--text-muted);
-        margin-top: 6px;
-        text-align: right;
-      }
-
-      /* ── Buttons ── */
-      .btn {
-        padding: 9px 18px;
-        border-radius: 8px;
-        border: none;
-        cursor: pointer;
-        font-size: 13px;
-        font-weight: 500;
-        transition: all 0.15s;
-        -webkit-app-region: no-drag;
-      }
-      .btn-primary {
-        background: var(--accent);
-        color: white;
-      }
-      .btn-primary:hover {
-        background: #574ff0;
-      }
-      .btn-secondary {
-        background: rgba(255, 255, 255, 0.08);
-        color: var(--text);
-      }
-      .btn-secondary:hover {
-        background: rgba(255, 255, 255, 0.12);
-      }
-      .btn-success {
-        background: var(--success);
-        color: white;
-      }
-      .btn-row {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-      }
-
-      /* ── Scrollbar ── */
-      ::-webkit-scrollbar {
-        width: 6px;
-      }
-      ::-webkit-scrollbar-track {
-        background: transparent;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 99px;
-      }
-    </style>
+    <!-- Replace the CDN link with local path -->
+    <link rel="stylesheet" href="index.css" />
   </head>
   <body>
-    <!-- Title Bar -->
-    <div class="titlebar">
-      <span class="titlebar-title">⚡ My Electron App</span>
-      <span class="titlebar-version" id="app-version">v1.0.0</span>
+    <!--Login Page-->
+<div class="login-page hide" id="login-page"> <!--  testing remove hide  class and add active later -->
+  <div class="login-wrap">
+    <div class="login-card">
+      <h2 class="brand">Login to Smart Market</h2>
+
+      <form id="login-form" class="login-form">
+        <div class="field">
+          <label for="login-username">Username</label>
+          <input type="text" id="login-username" name="username" placeholder="Enter your username" required autocomplete="username" />
+        </div>
+
+        <div class="field">
+          <label for="login-password">Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="login-password" name="password" placeholder="Enter your password" required autocomplete="current-password" />
+           
+          </div>
+        </div>
+
+        <div class="show-pw-row">
+          <input type="checkbox" id="show-password" />
+          <label for="show-password">Show password</label>
+        </div>
+
+        <button type="submit" id="login-submit" class="btn btn-primary">Login</button>
+      </form>
     </div>
+  </div>
+</div>
+    <!-- Title Bar -->
+   <div class="main-page active" id="main-page"> <!--  testing remove active class and add hide later -->
+      <div class="titlebar">
+        <span class="titlebar-title">⚡ Smart Market App</span>
+        <div>
+          <span class="titlebar-profile" id="user-name">Username </span>
+          <svg
+            width="32"
+            height="32"
+            viewBox="0 0 32 32"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="16" cy="16" r="16" fill="#1a7f4b" />
+            <circle cx="16" cy="12" r="6" fill="white" />
+            <ellipse cx="16" cy="28" rx="10" ry="8" fill="white" />
+          </svg>
+        </div>
+      </div>
 
-    <div class="app-body">
-      <!-- Sidebar -->
-      <nav class="sidebar">
-        <div class="nav-item active" data-page="home">
-          <span class="nav-icon">🏠</span> Home
-        </div>
-        <div class="nav-item" data-page="updates">
-          <span class="nav-icon">🔄</span> Updates
-        </div>
-        <div class="nav-item" data-page="settings">
-          <span class="nav-icon">⚙️</span> Settings
-        </div>
-      </nav>
-
-      <!-- Content -->
-      <main class="content">
-        <!-- Home Page -->
-        <div class="page active" id="page-home">
-          <div class="hero">
-            <span class="hero-icon">⚡</span>
-            <h1>Welcome to Smart Market App</h1>
-            <p>
-              Built with Electron · Auto-updates via GitHub Releases<br />Secure
-              · Cross-platform · Always up-to-date
-            </p>
+      <div class="app-body">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+          <div class="nav-item active" data-page="home">
+            <span class="nav-icon">🏠</span> Home
           </div>
+          <div class="nav-item" data-page="billing">
+            <span class="nav-icon">💰</span> Billing
+          </div>
+          <div class="nav-item" data-page="stock">
+            <span class="nav-icon">📦</span> Stock
+          </div>
+          <div class="nav-item" data-page="set-price">
+            <span class="nav-icon">🏷️</span> Set Price
+          </div>
+          <div class="nav-item" data-page="new-product">
+            <span class="nav-icon">➕</span> New Product
+          </div>
+         <div class="nav-item only-admin hide" data-page="new-employee">
+            <span class="nav-icon">👥</span> Add new Employee
+          </div>
+          <div class="nav-item only-admin hide" data-page="updates">
+            <span class="nav-icon">🔄</span> Updates
+          </div>
+          <div class="nav-item" data-page="settings">
+            <span class="nav-icon">⚙️</span> Settings
+          </div>
+          <div class="nav-item" data-page="version">
+            <span class="nav-icon">⚡</span>
+            <span id="app-version">v1.0.0</span>
+          </div>
+        </nav>
 
-          <div class="card">
-            <div class="card-title">📊 App Information</div>
-            <div class="info-grid">
-              <div class="info-item">
-                <div class="info-label">Version</div>
-                <div class="info-value" id="info-version">—</div>
-              </div>
-              <div class="info-item">
-                <div class="info-label">App Name</div>
-                <div class="info-value" id="info-name">—</div>
-              </div>
-              <div class="info-item">
-                <div class="info-label">Platform</div>
-                <div class="info-value" id="info-platform">—</div>
-              </div>
-              <div class="info-item">
-                <div class="info-label">Mode</div>
-                <div class="info-value" id="info-mode">—</div>
-              </div>
+        <!-- Content -->
+        <main class="content">
+          <!-- Home Page -->
+          <div class="page active" id="page-home">
+            <div class="hero">
+              <span class="hero-icon">⚡</span>
+              <h1>Welcome to Smart Market App</h1>
+              <p>
+                Built with Electron · Auto-updates via GitHub Releases<br />Secure
+                · Cross-platform · Always up-to-date
+              </p>
             </div>
-          </div>
-        </div>
 
-        <!-- Updates Page -->
-        <div class="page" id="page-updates">
-          <div class="card">
-            <div class="card-title">🔄 Auto-Update Status</div>
-
-            <div class="update-status" id="update-status-box">
-              <div class="status-dot" id="status-dot"></div>
-              <div class="status-text">
-                <div class="status-title" id="status-title">Ready to check</div>
-                <div class="status-detail" id="status-detail">
-                  Click "Check for Updates" below
+            <div class="card">
+              <div class="card-title">📊 Information</div>
+              <div class="info-grid">
+                <div class="info-item">
+                  <div class="info-label">Today Sales</div>
+                  <div class="info-value" id="info-today-sales">—</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Empty Stock Items</div>
+                  <div class="info-value" id="info-empty-stock-items">—</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Stock Shortage</div>
+                  <div class="info-value" id="info-stock-shortage">—</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Statistics</div>
+                  <div class="info-value" id="info-statistics">—</div>
                 </div>
               </div>
             </div>
+          </div>
+          <!--Billing page-->
+          <div class="page" id="page-billing">
+            <div class="hero">
+              <span class="hero-icon">⚡</span>
+              <h1>Welcome to Smart Market App Billing section</h1>
+              <p>Billing section</p>
+            </div>
+          </div>
+          <!--Stock page-->
+          <div class="page" id="page-stock">
+            <div class="hero">
+              <span class="hero-icon">⚡</span>
+              <h1>Welcome to Smart Market App Stock section</h1>
+              <p>Stock section</p>
+            </div>
+          </div>
+          <!--Set Price page-->
+          <div class="page" id="page-set-price">
+            <div class="hero">
+              <span class="hero-icon">⚡</span>
+              <h1>Welcome to Smart Market App Set Price section</h1>
+              <p>Set Price section</p>
+            </div>
+          </div>
 
-            <div class="progress-wrap" id="progress-wrap">
-              <div class="progress-bar-bg">
-                <div class="progress-bar-fill" id="progress-fill"></div>
+          <!--New Product page-->
+          <div class="page" id="page-new-product">
+            <div class="hero">
+              <span class="hero-icon">⚡</span>
+              <h1>Welcome to Smart Market App New Product section</h1>
+              <form id="new-product-form" class="new-product-form">
+                <label for="product-name">Product Name:</label>
+                <input type="text" id="product-name" name="product-name" />
+
+                <label for="product-price">Price:</label>
+                <input type="number"  step="0.01" id="product-price" name="product-price" />
+
+                <label for="product-stock">Stock Quantity:</label>
+                <input type="number"  step="0.01" id="product-stock" name="product-stock" />
+                <label for="product-stock-threshold">Stock Threshold:</label>
+                <input
+                  type="number"  step="0.01"
+                  id="product-stock-threshold"
+                  name="product-stock-threshold"
+                />
+                <label for="product-unit">Unit:</label>
+                <select id="product-unit" name="product-unit">
+                  <option value="">Select unit</option>
+                  <option value="pcs">Pieces (pcs)</option>
+                  <option value="kg">Kilograms (kg)</option>
+                  <option value="g">Grams (g)</option>
+                  <option value="l">Liters (l)</option>
+                  <option value="box">Boxes (box)</option>
+                </select>
+
+                <button
+                  type="submit"
+                  id="submit-new-product"
+                  class="btn btn-primary"
+                >
+                  Add Product
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!--Add new Employee details-->
+            <div class="page only-admin" id="page-new-employee">
+              <div class="hero">
+                <span class="hero-icon">⚡</span>
+                <h1>Welcome to Smart Market App New Employee section</h1>
+                <form id="new-employee-form" class="new-employee-form">
+                    <label for="new-employee-name">Employee Name:</label>
+                  <input type="text" id="new-employee-name" name="new-employee-name" />
+                  <label for="new-employee-username">Employee Username:</label>
+                  <input type="text" id="new-employee-username" name="new-employee-username" />
+                  <label for="new-employee-password">Employee Password:</label>
+                  <input type="text" id="new-employee-password" name="new-employee-password" />
+                
+                  <label for="new-employee-role">Role:</label>
+                  <input
+                    type="text"
+                    id="new-employee-role"
+                    name="new-employee-role"
+                  />
+  
+                  <label for="new-employee-contact">Contact Info:</label>
+                  <input
+                    type="text"
+                    id="new-employee-contact"
+                    name="new-employee-contact"
+                  />
+   <label for="new-employee-address">Address:</label>
+                  <input
+                    type="text"
+                    id="new-employee-address"
+                    name="new-employee-address"
+                  />
+                  <button
+                    type="submit"
+                    id="submit-new-employee"
+                    class="btn btn-primary"
+                  >
+                    Add Employee
+                  </button>
+                </form>
               </div>
-              <div class="progress-label" id="progress-label">0%</div>
+          <!-- Updates Page -->
+          <div class="page only-admin" id="page-updates">
+            <div class="card">
+              <div class="card-title">🔄 Auto-Update Status</div>
+
+              <div class="update-status" id="update-status-box">
+                <div class="status-dot" id="status-dot"></div>
+                <div class="status-text">
+                  <div class="status-title" id="status-title">
+                    Ready to check
+                  </div>
+                  <div class="status-detail" id="status-detail">
+                    Click "Check for Updates" below
+                  </div>
+                </div>
+              </div>
+
+              <div class="progress-wrap" id="progress-wrap">
+                <div class="progress-bar-bg">
+                  <div class="progress-bar-fill" id="progress-fill"></div>
+                </div>
+                <div class="progress-label" id="progress-label">0%</div>
+              </div>
+
+              <div class="btn-row" style="margin-top: 16px">
+                <button class="btn btn-primary" id="btn-check">
+                  🔍 Check for Updates
+                </button>
+                <button
+                  class="btn btn-success"
+                  id="btn-install"
+                  style="display: none"
+                >
+                  ⬇️ Install & Restart
+                </button>
+                <button class="btn btn-secondary" id="btn-log">
+                  📄 Open Log File
+                </button>
+              </div>
             </div>
 
-            <div class="btn-row" style="margin-top: 16px">
-              <button class="btn btn-primary" id="btn-check">
-                🔍 Check for Updates
-              </button>
-              <button
-                class="btn btn-success"
-                id="btn-install"
-                style="display: none"
+            <div class="card">
+              <div class="card-title">ℹ️ How Auto-Updates Work</div>
+              <div
+                style="
+                  font-size: 13px;
+                  color: var(--text-muted);
+                  line-height: 1.8;
+                "
               >
-                ⬇️ Install & Restart
-              </button>
-              <button class="btn btn-secondary" id="btn-log">
-                📄 Open Log File
-              </button>
+                <p>
+                  1. App checks GitHub Releases for a newer version on startup.
+                </p>
+                <p>2. If found, you're prompted to download the update.</p>
+                <p>
+                  3. Update downloads in the background with progress shown
+                  here.
+                </p>
+                <p>
+                  4. On completion, choose to restart now or later — the update
+                  installs automatically.
+                </p>
+              </div>
             </div>
           </div>
 
-          <div class="card">
-            <div class="card-title">ℹ️ How Auto-Updates Work</div>
-            <div
-              style="
-                font-size: 13px;
-                color: var(--text-muted);
-                line-height: 1.8;
-              "
-            >
-              <p>
-                1. App checks GitHub Releases for a newer version on startup.
-              </p>
-              <p>2. If found, you're prompted to download the update.</p>
-              <p>
-                3. Update downloads in the background with progress shown here.
-              </p>
-              <p>
-                4. On completion, choose to restart now or later — the update
-                installs automatically.
+          <!-- Settings Page -->
+          <div class="page" id="page-settings">
+            <div class="card">
+              <div class="card-title">⚙️ Settings</div>
+              <p style="color: var(--text-muted); font-size: 13px">
+                Add your app settings here.
               </p>
             </div>
           </div>
-        </div>
-
-        <!-- Settings Page -->
-        <div class="page" id="page-settings">
-          <div class="card">
-            <div class="card-title">⚙️ Settings</div>
-            <p style="color: var(--text-muted); font-size: 13px">
-              Add your app settings here.
-            </p>
-          </div>
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
-
     <script src="renderer.js"></script>
   </body>
 </html>
