@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings</title>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <div class="settings-page only-admin" id="settings-page">
+      <div class="card">
+        <div class="card-title">🔄 Auto-Update Status</div>
+
+        <div class="update-status" id="update-status-box">
+          <div class="status-dot" id="status-dot"></div>
+          <div class="status-text">
+            <div class="status-title" id="status-title">Ready to check</div>
+            <div class="status-detail" id="status-detail">
+              Click "Check for Updates" below
+            </div>
+          </div>
+        </div>
+
+        <div class="progress-wrap" id="progress-wrap">
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progress-fill"></div>
+          </div>
+          <div class="progress-label" id="progress-label">0%</div>
+        </div>
+
+        <div class="btn-row" style="margin-top: 16px">
+          <button class="btn btn-primary" id="btn-check">
+            🔍 Check for Updates
+          </button>
+          <button
+            class="btn btn-success"
+            id="btn-install"
+            style="display: none"
+          >
+            ⬇️ Install & Restart
+          </button>
+          <button class="btn btn-secondary" id="btn-log">
+            📄 Open Log File
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">ℹ️ How Auto-Updates Work</div>
+        <div
+          style="font-size: 13px; color: var(--text-muted); line-height: 1.8"
+        >
+          <p>1. App checks GitHub Releases for a newer version on startup.</p>
+          <p>2. If found, you're prompted to download the update.</p>
+          <p>3. Update downloads in the background with progress shown here.</p>
+          <p>
+            4. On completion, choose to restart now or later — the update
+            installs automatically.
+          </p>
+        </div>
+      </div>
+    </div>
+    <script src="settings.js"></script>
+  </body>
+</html>

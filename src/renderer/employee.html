@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Employees</title>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <div class="employees-page only-admin" id="employees-page">
+      <div class="employee-header">
+        <div>
+          <span class="hero-icon">⚡</span>
+          <h1>Employees</h1>
+        </div>
+        <button type="button" id="open-add-employee-modal" class="btn btn-primary">
+          + Add Employee
+        </button>
+      </div>
+
+      <div class="employee-table-wrap">
+        <table class="employee-table" id="employee-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Username</th>
+              <th>Role</th>
+              <th>Contact</th>
+              <th>Address</th>
+            </tr>
+          </thead>
+          <tbody id="employee-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="employee-modal-overlay" class="employee-modal-overlay hidden" aria-hidden="true">
+      <div class="employee-modal" role="dialog" aria-modal="true" aria-labelledby="employee-modal-title">
+        <div class="modal-header">
+          <h2 id="employee-modal-title">Add Employee</h2>
+          <button type="button" id="employee-modal-close" class="close-btn" aria-label="Close">×</button>
+        </div>
+
+        <form id="employee-form" class="employee-form">
+          <label for="employee-name">Employee Name</label>
+          <input type="text" id="employee-name" name="employee-name" required />
+
+          <label for="employee-username">Username</label>
+          <input type="text" id="employee-username" name="employee-username" required />
+
+          <label for="employee-password">Password</label>
+          <input type="password" id="employee-password" name="employee-password" required />
+
+          <label for="employee-role">Role</label>
+          <select id="employee-role" name="employee-role">
+            <option value="Employee">Employee</option>
+            <option value="Administrator">Administrator</option>
+            <option value="Manager">Manager</option>
+          </select>
+
+          <label for="employee-contact">Contact</label>
+          <input type="text" id="employee-contact" name="employee-contact" />
+
+          <label for="employee-address">Address</label>
+          <input type="text" id="employee-address" name="employee-address" />
+
+          <div class="modal-actions">
+            <button type="button" id="cancel-employee-modal" class="btn btn-secondary">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Employee</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="employee.js"></script>
+  </body>
+</html>

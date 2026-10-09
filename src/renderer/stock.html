@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="stock.css" />
+    <link rel="stylesheet" href="index.css" />
+    <title>Stock</title>
+  </head>
+  <body>
+    <div class="container hero">
+      <h1>Stock Management</h1>
+      <div class="add-item-btn-container">
+        <button id="add-item-btn">➕ Add new item</button>
+      </div>
+      <div id="stock-table-container">
+        <table id="stock-table">
+          <thead>
+            <tr>
+              <th>Product ID</th>
+              <th>Product Name</th>
+              <th>Current Stock</th>
+              <th>Current Price</th>
+              <th>Stock Threshold</th>
+              <th>Unit</th>
+            </tr>
+          </thead>
+          <tbody id="stock-table-body">
+            <!-- Stock data will be dynamically inserted here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <script src="stock.js"></script>
+  </body>
+</html>

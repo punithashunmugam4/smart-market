@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline';"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Market</title>
+
+    <!-- Replace the CDN link with local path -->
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <!--Login Page-->
+<div class="login-page hide" id="login-page"> <!--  testing remove hide  class and add active later -->
+  <div class="login-wrap">
+    <div class="login-card">
+      <h2 class="brand">Login to Smart Market</h2>
+
+      <form id="login-form" class="login-form">
+        <div class="field">
+          <label for="login-username">Username</label>
+          <input type="text" id="login-username" name="username" placeholder="Enter your username" required autocomplete="username" />
+        </div>
+
+        <div class="field">
+          <label for="login-password">Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="login-password" name="password" placeholder="Enter your password" required autocomplete="current-password" />
+           
+          </div>
+        </div>
+
+        <div class="show-pw-row">
+          <input type="checkbox" id="show-password" />
+          <label for="show-password">Show password</label>
+        </div>
+
+        <button type="submit" id="login-submit" class="btn btn-primary">Login</button>
+      </form>
+    </div>
+  </div>
+</div>
+    <!-- Title Bar -->
+   <div class="main-page active" id="main-page"> <!--  testing remove active class and add hide later -->
+      <div class="titlebar">
+        <span class="titlebar-title">⚡ Smart Market App</span>
+        <div>
+          <span class="titlebar-profile" id="user-name">Username </span>
+          <svg
+            width="32"
+            height="32"
+            viewBox="0 0 32 32"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="16" cy="16" r="16" fill="#1a7f4b" />
+            <circle cx="16" cy="12" r="6" fill="white" />
+            <ellipse cx="16" cy="28" rx="10" ry="8" fill="white" />
+          </svg>
+        </div>
+      </div>
+
+      <div class="app-body">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+          <div class="nav-item active" data-page="home">
+            <span class="nav-icon">🏠</span> Home
+          </div>
+          <div class="nav-item" data-page="billing">
+            <span class="nav-icon">💰</span> Billing
+          </div>
+          <div class="nav-item" data-page="stock">
+            <span class="nav-icon">📦</span> Stock
+          </div>
+          <div class="nav-item" data-page="set-price">
+            <span class="nav-icon">🏷️</span> Set Price
+          </div>
+          <div class="nav-item" data-page="new-product">
+            <span class="nav-icon">➕</span> New Product
+          </div>
+         <div class="nav-item only-admin" data-page="new-employee">
+            <span class="nav-icon">👥</span> Add new Employee
+          </div>
+          <div class="nav-item only-admin" data-page="updates">
+            <span class="nav-icon">🔄</span> Updates
+          </div>
+          <div class="nav-item" data-page="settings">
+            <span class="nav-icon">⚙️</span> Settings
+          </div>
+          <div class="nav-item" data-page="version">
+            <span class="nav-icon">⚡</span>
+            <span id="app-version">v1.0.0</span>
+          </div>
+        </nav>
+
+        <!-- Content -->
+        <main class="content">
+          <!-- Home Page -->
+          <div class="page active" id="page-home">
+            <div class="hero">
+              <span class="hero-icon">⚡</span>
+              <h1>Welcome to Smart Market App</h1>
+              <p>
+                Built with Electron · Auto-updates via GitHub Releases<br />Secure
+                · Cross-platform · Always up-to-date
+              </p>
+            </div>
+
+            <div class="card">
+              <div class="card-title">📊 Information</div>
+              <div class="info-grid">
+                <div class="info-item">
+                  <div class="info-label">Today Sales</div>
+                  <div class="info-value" id="info-today-sales">—</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Empty Stock Items</div>
+                  <div class="info-value" id="info-empty-stock-items">—</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Stock Shortage</div>
+                  <div class="info-value" id="info-stock-shortage">—</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Statistics</div>
+                  <div class="info-value" id="info-statistics">—</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--Billing page-->
+          <div class="page" id="page-billing">
+            <div class="hero">
+              <span class="hero-icon">⚡</span>
+              <h1>Welcome to Smart Market App Billing section</h1>
+              <p>Billing section</p>
+            </div>
+          </div>
+          <!--Stock page-->
+          <div class="page" id="page-stock">
+            <div class="hero">
+              <span class="hero-icon">⚡</span>
+              <h1>Welcome to Smart Market App Stock section</h1>
+              <p>Stock section</p>
+            </div>
+          </div>
+          <!--Set Price page-->
+          <div class="page" id="page-set-price">
+            <div class="hero">
+              <span class="hero-icon">⚡</span>
+              <h1>Welcome to Smart Market App Set Price section</h1>
+              <p>Set Price section</p>
+            </div>
+          </div>
+
+          <!--New Product page-->
+          <div class="page" id="page-new-product">
+            <div class="hero">
+              <span class="hero-icon">⚡</span>
+              <h1>Welcome to Smart Market App New Product section</h1>
+              <form id="new-product-form" class="new-product-form">
+                <label for="product-name">Product Name:</label>
+                <input type="text" id="product-name" name="product-name" />
+
+                <label for="product-price">Price:</label>
+                <input type="number"  step="0.01" id="product-price" name="product-price" />
+
+                <label for="product-stock">Stock Quantity:</label>
+                <input type="number"  step="0.01" id="product-stock" name="product-stock" />
+                <label for="product-stock-threshold">Stock Threshold:</label>
+                <input
+                  type="number"  step="0.01"
+                  id="product-stock-threshold"
+                  name="product-stock-threshold"
+                />
+                <label for="product-unit">Unit:</label>
+                <select id="product-unit" name="product-unit">
+                  <option value="">Select unit</option>
+                  <option value="pcs">Pieces (pcs)</option>
+                  <option value="kg">Kilograms (kg)</option>
+                  <option value="g">Grams (g)</option>
+                  <option value="l">Liters (l)</option>
+                  <option value="box">Boxes (box)</option>
+                </select>
+
+                <button
+                  type="submit"
+                  id="submit-new-product"
+                  class="btn btn-primary"
+                >
+                  Add Product
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!--Add new Employee details-->
+            <div class="page only-admin" id="page-new-employee">
+              <div class="hero">
+                <span class="hero-icon">⚡</span>
+                <h1>Welcome to Smart Market App New Employee section</h1>
+                <form id="new-employee-form" class="new-employee-form">
+                    <label for="new-employee-name">Employee Name:</label>
+                  <input type="text" id="new-employee-name" name="new-employee-name" />
+                  <label for="new-employee-username">Employee Username:</label>
+                  <input type="text" id="new-employee-username" name="new-employee-username" />
+                  <label for="new-employee-password">Employee Password:</label>
+                  <input type="text" id="new-employee-password" name="new-employee-password" />
+                
+                  <label for="new-employee-role">Role:</label>
+                  <input
+                    type="text"
+                    id="new-employee-role"
+                    name="new-employee-role"
+                  />
+  
+                  <label for="new-employee-contact">Contact Info:</label>
+                  <input
+                    type="text"
+                    id="new-employee-contact"
+                    name="new-employee-contact"
+                  />
+   <label for="new-employee-address">Address:</label>
+                  <input
+                    type="text"
+                    id="new-employee-address"
+                    name="new-employee-address"
+                  />
+                  <button
+                    type="submit"
+                    id="submit-new-employee"
+                    class="btn btn-primary"
+                  >
+                    Add Employee
+                  </button>
+                </form>
+              </div>
+          <!-- Updates Page -->
+          <div class="page only-admin" id="page-updates">
+            <div class="card">
+              <div class="card-title">🔄 Auto-Update Status</div>
+
+              <div class="update-status" id="update-status-box">
+                <div class="status-dot" id="status-dot"></div>
+                <div class="status-text">
+                  <div class="status-title" id="status-title">
+                    Ready to check
+                  </div>
+                  <div class="status-detail" id="status-detail">
+                    Click "Check for Updates" below
+                  </div>
+                </div>
+              </div>
+
+              <div class="progress-wrap" id="progress-wrap">
+                <div class="progress-bar-bg">
+                  <div class="progress-bar-fill" id="progress-fill"></div>
+                </div>
+                <div class="progress-label" id="progress-label">0%</div>
+              </div>
+
+              <div class="btn-row" style="margin-top: 16px">
+                <button class="btn btn-primary" id="btn-check">
+                  🔍 Check for Updates
+                </button>
+                <button
+                  class="btn btn-success"
+                  id="btn-install"
+                  style="display: none"
+                >
+                  ⬇️ Install & Restart
+                </button>
+                <button class="btn btn-secondary" id="btn-log">
+                  📄 Open Log File
+                </button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">ℹ️ How Auto-Updates Work</div>
+              <div
+                style="
+                  font-size: 13px;
+                  color: var(--text-muted);
+                  line-height: 1.8;
+                "
+              >
+                <p>
+                  1. App checks GitHub Releases for a newer version on startup.
+                </p>
+                <p>2. If found, you're prompted to download the update.</p>
+                <p>
+                  3. Update downloads in the background with progress shown
+                  here.
+                </p>
+                <p>
+                  4. On completion, choose to restart now or later — the update
+                  installs automatically.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Settings Page -->
+          <div class="page" id="page-settings">
+            <div class="card">
+              <div class="card-title">⚙️ Settings</div>
+              <p style="color: var(--text-muted); font-size: 13px">
+                Add your app settings here.
+              </p>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+    <script src="renderer.js"></script>
+  </body>
+</html>
