@@ -1,20 +1,5 @@
-// const {
-//   app,
-//   BrowserWindow,
-//   ipcMain,
-//   dialog,
-//   shell,
-//   Menu,
-//   Tray,
-//   globalShortcut,
-// } = require("electron");
-// // const contextMenu = require("electron-context-menu");
-// const log = require("electron-log");
-// const path = require("path");
-// const Database = require("better-sqlite3");
-// const fs = require("fs");
-
-import {
+import electron from "electron";
+const {
   app,
   BrowserWindow,
   ipcMain,
@@ -23,13 +8,13 @@ import {
   Menu,
   Tray,
   globalShortcut,
-} from "electron";
-// const contextMenu = require("electron-context-menu");
+} = electron;
 import log from "electron-log";
 import path from "path";
 import Database from "better-sqlite3";
 import fs from "fs";
 import { fileURLToPath } from "node:url";
+import { downloadUpdate ,checkForFileUpdates} from "./updater.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -246,15 +231,18 @@ function createMenu() {
 function checkForUpdates(manual = false) {
    if (app.isPackaged) {
     try {
-      const updaterPath = path.join(app.getAppPath(), "updater.js");
+      const updaterPath = path.join(__dirname, "updater.js");
       if (fs.existsSync(updaterPath)) {
-        const updater = requireC(updaterPath);
-        if (updater && typeof updater.checkForFileUpdates === "function") {
-          updater
-            .checkForFileUpdates().then((data)=>{
+        // const updater = requireC(updaterPath);
+        if (typeof checkForFileUpdates === "function") {
+          checkForFileUpdates().then((data)=>{
               if(!data){
               log.info("No update available.");
               sendToRenderer("update-status", { status: "up-to-date" });
+              }
+              else if(data && data.manifestVersion === data.currentVersion){
+                log.info("No new version available.");
+                sendToRenderer("update-status", { status: "up-to-date" });
               }
               else{
                  log.info("Update available:", data.version);
@@ -277,7 +265,7 @@ function checkForUpdates(manual = false) {
               })
               .then(({ response }) => {
                 if (response === 0) {
-                  updater.downloadUpdate();
+                  downloadUpdate();
                 }
               });
             }
@@ -329,7 +317,7 @@ ipcMain.handle("check-for-updates", () => {
 });
 
 ipcMain.handle("install-update", () => {
-  quitAndInstall(false, true);
+  downloadUpdate();
 });
 
 ipcMain.handle("open-log-file", () => {
@@ -353,17 +341,11 @@ const getUserInfo = async (username) => {
 };
 
 const getEmployees = () => {
-  const rows = db.prepare(`SELECT * FROM "Users" ORDER BY rowid ASC`).all();
-
-  return rows.map((row) => ({
-    id: row.user_id ?? row.id ?? row.rowid,
-    name: row.name,
-    username: row.username,
-    role: row.role,
-    contact: row.contact,
-    address: row.address,
-    timestamp: row.timestamp,
-  }));
+  return db
+    .prepare(
+      `SELECT user_id AS id, name, username, role, contact, address, timestamp FROM "Users" ORDER BY user_id ASC`,
+    )
+    .all();
 };
 
 const handleAddUser = async (event, obj) => {

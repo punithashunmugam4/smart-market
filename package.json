@@ -30,16 +30,16 @@
   },
     "build": {
     "appId": "smart-market",
-    "icon": "icon.ico",
+    "icon": "assets/icon.ico",
     "asar": false,
     "files": [
       "**/*"
     ],
     "win": {
-      "icon": "icon.ico"
+      "icon": "assets/icon.ico"
     },
     "linux": {
-      "icon": "icon.png"
+      "icon": "assets/icon.png"
     },
     "publish": [
       {
@@ -52,7 +52,13 @@
       "oneClick": false,
       "perMachine": true,
       "allowToChangeInstallationDirectory": true,
-      "deleteAppDataOnUninstall": true
+      "deleteAppDataOnUninstall": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "Smart Market",
+      "runAfterFinish": true,
+      "installerIcon": "assets/icon.ico",
+      "uninstallerIcon": "assets/icon.ico",
+      "installerHeaderIcon": "assets/icon.ico"
     }
   }
 }

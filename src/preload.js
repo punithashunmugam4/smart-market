@@ -1,5 +1,6 @@
 // const { contextBridge, ipcRenderer } = require("electron");
-import { contextBridge, ipcRenderer } from "electron";
+import electron from "electron";
+const { contextBridge, ipcRenderer } = electron;
 
 const toast = {
   show: function (msg) {

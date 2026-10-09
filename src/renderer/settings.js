@@ -91,15 +91,15 @@ document.getElementById("btn-check").addEventListener("click", async () => {
   if (electronAPI?.checkForUpdates) {
     await electronAPI.checkForUpdates();
   } else {
-    safeToast("Check-for-updates API unavailable.");
+    electronAPI.toast("Check-for-updates API unavailable.");
   }
-});
+});``
 
 document.getElementById("btn-install").addEventListener("click", async () => {
   if (electronAPI?.installUpdate) {
     await electronAPI.installUpdate();
   } else {
-    safeToast("Install-update API unavailable.");
+    electronAPI.toast("Install-update API unavailable.");
   }
 });
 
@@ -107,6 +107,6 @@ document.getElementById("btn-log").addEventListener("click", async () => {
   if (electronAPI?.openLogFile) {
     await electronAPI.openLogFile();
   } else {
-    safeToast("Open-log API unavailable.");
+    electronAPI.toast("Open-log API unavailable.");
   }
 });

@@ -1,14 +1,14 @@
 {
-  "version": "1.0.1",
+  "version": "1.0.0",
   "changedFiles": [
     "package-lock.json",
     "package.json",
-    "main.js",
-    "preload.js",
-    "renderer/employee.html",
-    "renderer/employee.js",
-    "renderer/stock.js",
-    "renderer/index.css"
+    "src/main.js",
+    "src/preload.js",
+    "src/renderer/employee.html",
+    "src/renderer/employee.js",
+    "src/renderer/stock.js",
+    "src/renderer/index.css"
   ],
   "newDependencies": {}
 }

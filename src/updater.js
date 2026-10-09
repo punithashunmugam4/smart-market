@@ -1,11 +1,10 @@
-const axios = require("axios");
-const path = require("path");
-const fs = require("fs");
-const exec = require("child_process").exec;
-const { app } = require("electron");
+import { exec } from "node:child_process";
+import fs from "node:fs";
+import path from "node:path";
+import electron from "electron";
+const { app } = electron;
 
 function getLocalVersion() {
-  // Prefer a persisted local hot-update version, then package.json, then app version.
   const appPath = app.getAppPath();
   const persistedVersionFile = path.join(appPath, "version.json");
 
@@ -21,7 +20,9 @@ function getLocalVersion() {
   }
 
   try {
-    const pkgJson = require(path.join(app.getAppPath(), "package.json"));
+    const pkgJson = JSON.parse(
+      fs.readFileSync(path.join(app.getAppPath(), "package.json"), "utf8"),
+    );
     if (pkgJson && typeof pkgJson.version === "string") {
       return pkgJson.version;
     }
@@ -36,122 +37,122 @@ function getLocalVersion() {
   return "0.0.0";
 }
 
-function check_if_new_version_available(){
-const currentVersion = getLocalVersion();
-
-  // Replace with your actual GitHub Username and Repository Name
-  const GITHUB_USER = "punithashunmugam4";
-  const GITHUB_REPO = "smart-market";
-  const BRANCH = "main";
-
-  // Base URL pointing to your update folder on GitHub
-  const baseUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${BRANCH}`;
-
-  try {
-    // 1. Fetch the manifest file from GitHub
-    const response = await axios.get(`${baseUrl}/manifest.json`);
-    const manifest = response.data;
-    console.log({
-      "currentVersion":
-      currentVersion,
-      "manifestVersion":
-      manifest?.version,
-    }
-    );
-
-    if (!manifest?.version) {
-      console.warn("Manifest version missing; skipping update check.");
-      return(false);
-    }
-    else{
-      return({
-      "currentVersion":
-      currentVersion,
-      "manifestVersion":
-      manifest?.version,
-    });
-    }
-} catch (error) {
-    console.log(error);
-    if (error.response && error.response.status === 404) {
-      console.log(
-        "Update manifest or update file not found on GitHub; skipping update check.",
-      );
-      
-    } else {
-      console.error("GitHub update sync failed:", error);
-    }
-    return(false)
-  }
-}
-async function checkForFileUpdates() {
-let is_version_available=check_if_new_version_available();
-  return is_version_available;
-}
-
-function downloadUpdate(){
-  let is_version_available=check_if_new_version_available();
-if (is_version_available.manifestVersion !== is_version_available.currentVersion) {
-      // In a packaged app, app.getAppPath() points inside app.asar, which is not writable.
-      // Use userData for downloaded update files instead.
-
-      let targetDir = app.getAppPath();
-
-      // 2. Loop through and download EVERY changed file listed in the manifest
-      for (const filePath of manifest.changedFiles) {
-        const fileUrl = `${baseUrl}/${filePath}`;
-        const fileData = await axios.get(fileUrl, { responseType: "text" });
-
-        let destPath = path.join(targetDir, filePath);
-        console.log("Downloading files to", destPath);
-        try {
-          fs.mkdirSync(path.dirname(destPath), { recursive: true });
-          fs.writeFileSync(destPath, fileData.data);
-        } catch (err) {
-          console.error(`Failed to write updated file ${filePath}:`, err);
-          targetDir = app.getPath("userData");
-          destPath = path.join(targetDir, filePath);
-          fs.mkdirSync(path.dirname(destPath), { recursive: true });
-          fs.writeFileSync(destPath, fileData.data);
-        }
-      }
-
-      // Persist the updated version so the updated files are recognized after restart.
-      fs.writeFileSync(
-        path.join(targetDir, "version.json"),
-        JSON.stringify({ version: manifest.version }),
-      );
-
-      // 3. Handle Node Modules if they exist in the manifest
-      if (
-        manifest.newDependencies &&
-        Object.keys(manifest.newDependencies).length > 0
-      ) {
-        const localPkg = {
-          dependencies: manifest.newDependencies,
-          version: manifest.version,
-        };
-        fs.writeFileSync(
-          path.join(targetDir, "package.json"),
-          JSON.stringify(localPkg),
-        );
-        console.log("Running npm install for new dependencies...");
-        exec("npm install --production", { cwd: targetDir }, (err) => {
-          if (!err) restartApp();
-        });
-      } else {
-        console.log("No new dependencies. Restarting app...");
-        restartApp();
-      }
-    }
-    else{
-      return "Version up-to-date";
-    }
-}
 
 function restartApp() {
   app.relaunch();
   app.exit(0);
 }
 
-module.exports = { checkForFileUpdates,downloadUpdate };
+
+ async function check_if_new_version_available() {
+  const currentVersion = getLocalVersion();
+  const githubUser = "punithashunmugam4";
+  const githubRepo = "smart-market";
+  const branch = "main";
+  const baseUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/${branch}`;
+
+  try {
+    const response = await fetch(`${baseUrl}/src/manifest.json`);
+    if (!response.ok) {
+      console.warn(`Update manifest request failed with status ${response.status}`);
+      return false;
+    }
+
+    const manifest = await response.json();
+    console.log({ currentVersion, manifestVersion: manifest?.version });
+
+    if (!manifest?.version) {
+      console.warn("Manifest version missing; skipping update check.");
+      return false;
+    }
+
+    return {
+      currentVersion,
+      manifestVersion: manifest.version,
+      releaseNotes: manifest.releaseNotes || "",
+      changedFiles: Array.isArray(manifest.changedFiles) ? manifest.changedFiles : [],
+      newDependencies: manifest.newDependencies || {},
+    };
+  } catch (error) {
+    console.log(error);
+    console.error("GitHub update sync failed:", error);
+    return false;
+  }
+}
+
+export async function checkForFileUpdates() {
+  return check_if_new_version_available();
+}
+
+export async function downloadUpdate() {
+  const updateInfo = await check_if_new_version_available();
+  if (!updateInfo || !updateInfo.manifestVersion || updateInfo.manifestVersion === updateInfo.currentVersion) {
+    return "Version up-to-date";
+  }
+
+  const githubUser = "punithashunmugam4";
+  const githubRepo = "smart-market";
+  const branch = "main";
+  const baseUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/${branch}`;
+
+  const manifestResponse = await fetch(`${baseUrl}/src/manifest.json`);
+  if (!manifestResponse.ok) {
+    throw new Error(`Unable to fetch manifest: ${manifestResponse.status}`);
+  }
+
+  const manifest = await manifestResponse.json();
+  let targetDir = app.getAppPath();
+
+  for (const filePath of manifest.changedFiles || []) {
+    const fileUrl = `${baseUrl}/${filePath}`;
+    const fileResponse = await fetch(fileUrl);
+    if (!fileResponse.ok) {
+      throw new Error(`Unable to fetch ${fileUrl}: ${fileResponse.status}`);
+    }
+
+    const fileData = await fileResponse.text();
+    const destPath = path.join(targetDir, filePath);
+    console.log("Downloading files to", destPath);
+
+    try {
+      fs.mkdirSync(path.dirname(destPath), { recursive: true });
+      fs.writeFileSync(destPath, fileData);
+    } catch (err) {
+      console.error(`Failed to write updated file ${filePath}:`, err);
+      targetDir = app.getPath("userData");
+      const fallbackPath = path.join(targetDir, filePath);
+      fs.mkdirSync(path.dirname(fallbackPath), { recursive: true });
+      fs.writeFileSync(fallbackPath, fileData);
+    }
+  }
+
+  fs.writeFileSync(
+    path.join(targetDir, "version.json"),
+    JSON.stringify({ version: manifest.version }),
+  );
+
+  if (manifest.newDependencies && Object.keys(manifest.newDependencies).length > 0) {
+    const localPkg = {
+      dependencies: manifest.newDependencies,
+      version: manifest.version,
+    };
+
+    fs.writeFileSync(
+      path.join(targetDir, "package.json"),
+      JSON.stringify(localPkg),
+    );
+
+    console.log("Running npm install for new dependencies...");
+    exec("npm install --production", { cwd: targetDir }, (err) => {
+      if (!err) {
+        restartApp();
+      }
+    });
+  } else {
+    console.log("No new dependencies. Restarting app...");
+    restartApp();
+  }
+
+  return "Update downloaded";
+}
+

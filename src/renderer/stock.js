@@ -89,7 +89,7 @@ function showAddNewItemModal() {
         ),
       });
       console.log("New item added:", newItem);
-      electronAPI.toast.show("Item added successfully!");
+      electronAPI.toast("Item added successfully!");
     } finally {
       closeAddNewItemModal();
       const newRow = document.createElement("tr");
@@ -99,7 +99,7 @@ function showAddNewItemModal() {
           console.log("All stock items after adding new item:", res);
           return res.data.slice(-1)[0];
         });
-      newRow.innerHTML = `<td>${item.key}</td>
+      newRow.innerHTML = `<td>${item.product_id}</td>
       <td>${item.product_name}</td>
       <td>${item.price}</td>
       <td>${item.stock_quantity}</td>
@@ -130,7 +130,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   stockItems.data.length > 0 &&
     stockItems.data.forEach((item) => {
       const row = document.createElement("tr");
-      row.innerHTML = `<td>${item.key}</td>
+      row.innerHTML = `<td>${item.product_id}</td>
 
       <td>${item.product_name}</td>
       <td>${item.price}</td>
